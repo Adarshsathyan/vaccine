@@ -201,6 +201,50 @@ function displayDistrictSearch(data){
   }
 }
 
+//usersignup
+async function  userSignup (){
+  let f_name = fullname.value;
+  let email  = username.value;
+  let password = pass.value;
+  let c_password = c_pass.value;
+  if(email in localStorage){
+    swal("Email already exists","use another email","error")
+  }else{
+    if(password==c_password){
+      let user={
+        f_name:f_name,
+        email:email,
+        password:c_password
+      }
+      localStorage.setItem(email,JSON.stringify(user));
+      await swal("User created","please login","success");
+      location.href="../Login/login.html";
+    }else{
+      swal("Password doesnt match","Please re-enter and try again","error")
+    }
+  }
+
+}
+
+//userlogin function
+function userLogin(){
+
+  let email = username.value;
+  let password = pass.value;
+
+  if(email in localStorage){
+    let user = JSON.parse(localStorage.getItem(email));
+    if(user.password==password){
+      sessionStorage.setItem("user", email);
+      location.href="../index.html";
+    }else{
+      swal("Invalid password","Try again","error")
+    }
+  }else{
+    swal("Invalid username","Please check and try again","error")
+  }
+}
+
 
 //header scroll
 let header=document.querySelector('#header')
@@ -213,3 +257,22 @@ window.addEventListener('scroll',()=>{
         header.style.backgroundColor="";
     }
 })
+
+
+//logout
+async function logoutUser(){
+  sessionStorage.removeItem("user");
+  await swal("Log outted","sigin to schedule your vaccine","success");
+  location.href=""
+}
+
+if("user" in sessionStorage){
+  signin.style.display="none";
+  schedule.style.display="block";
+  logout.style.display = "block";
+
+}else{
+  signin.style.display="block";
+  logout.style.display="none";
+  schedule.style.display="none";
+}
